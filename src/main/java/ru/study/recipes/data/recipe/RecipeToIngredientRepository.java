@@ -13,7 +13,7 @@ import java.util.UUID;
 public class RecipeToIngredientRepository {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     public void persist(RecipeToIngredientEntity entity) {
         em.persist(entity);

@@ -37,7 +37,7 @@ public class RecipesServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try (InputStream is = req.getInputStream()) {
-            CreateRecipeRequest createRecipeRequest = objectMapper.readValue(is, new TypeReference<>() {});
+            CreateRecipeRequest createRecipeRequest = objectMapper.readValue(is, new TypeReference<CreateRecipeRequest>() {});
             recipeService.create(createRecipeRequest);
         } catch (IOException e) {
             throw new RuntimeException(e);

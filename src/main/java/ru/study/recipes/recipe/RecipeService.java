@@ -55,7 +55,6 @@ public class RecipeService {
                       .toList();
     }
 
-    @Transactional
     public UUID create(CreateRecipeRequest createRecipeRequest) {
 
         RecipeEntity recipe = recipeMapper.mapToEntity(createRecipeRequest);
@@ -73,7 +72,6 @@ public class RecipeService {
         return recipe.getId();
     }
 
-    @Transactional
     public void delete(UUID recipeId) {
         recipeToIngredientRepository.deleteByRecipeId(recipeId);
         recipeRepository.delete(recipeId);

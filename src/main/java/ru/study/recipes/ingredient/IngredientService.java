@@ -25,14 +25,12 @@ public class IngredientService {
         return ingredientRepository.findAll().stream().map(ingredientMapper::map).toList();
     }
 
-    @Transactional
     public UUID create(CreateIngredientRequest createIngredientRequest) {
         IngredientEntity ingredient = ingredientMapper.map(createIngredientRequest);
         ingredientRepository.persist(ingredient);
         return ingredient.getId();
     }
 
-    @Transactional
     public void delete(UUID ingredientId) {
         ingredientRepository.delete(ingredientId);
     }

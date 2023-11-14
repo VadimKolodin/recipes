@@ -12,7 +12,7 @@ import java.util.UUID;
 public class RecipeRepository {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     public void persist(RecipeEntity entity) {
         em.persist(entity);

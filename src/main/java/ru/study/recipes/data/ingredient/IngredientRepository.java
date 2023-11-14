@@ -11,7 +11,7 @@ import java.util.UUID;
 public class IngredientRepository {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     public List<IngredientEntity> findAll() {
         return em.createQuery("select i from IngredientEntity i", IngredientEntity.class).getResultList();
