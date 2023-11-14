@@ -1,15 +1,15 @@
 package ru.study.recipes.data.recipe;
 
-import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.stereotype.Repository;
 import ru.study.recipes.data.recipe.model.IngredientInRecipeView;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-@Stateless
+@Repository
 public class RecipeToIngredientRepository {
 
     @PersistenceContext

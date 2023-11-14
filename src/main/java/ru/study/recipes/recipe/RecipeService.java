@@ -1,16 +1,16 @@
 package ru.study.recipes.recipe;
 
-import jakarta.ejb.Stateless;
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.study.recipes.data.recipe.RecipeEntity;
 import ru.study.recipes.data.recipe.RecipeRepository;
 import ru.study.recipes.data.recipe.RecipeToIngredientEntity;
+import ru.study.recipes.data.recipe.RecipeToIngredientRepository;
 import ru.study.recipes.data.recipe.model.IngredientInRecipeView;
 import ru.study.recipes.ingredient.IngredientMapper;
 import ru.study.recipes.recipe.model.CreateRecipeRequest;
 import ru.study.recipes.recipe.model.RecipeWithIngredientResponse;
-import ru.study.recipes.data.recipe.RecipeToIngredientRepository;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,28 +18,25 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Stateless
+@Service
+@RequiredArgsConstructor
 public class RecipeService {
 
-    @Inject
-    private IngredientMapper ingredientMapper;
+    private final IngredientMapper ingredientMapper;
 
-    @Inject
-    private RecipeMapper recipeMapper;
+    private final RecipeMapper recipeMapper;
 
-    @Inject
-    private RecipeRepository recipeRepository;
+    private final RecipeRepository recipeRepository;
 
-    @Inject
-    private RecipeToIngredientRepository recipeToIngredientRepository;
+    private final RecipeToIngredientRepository recipeToIngredientRepository;
 
 
     public List<RecipeWithIngredientResponse> getAll() {
 
         List<RecipeEntity> recipes = recipeRepository.findAll();
         List<IngredientInRecipeView> ingredients = recipeToIngredientRepository.findAllByRecipeIds(recipes.stream()
-                                                                                                  .map(RecipeEntity::getId)
-                                                                                                  .toList());
+                                                                                                          .map(RecipeEntity::getId)
+                                                                                                          .toList());
 
         Map<UUID, List<IngredientInRecipeView>> recipeToIngredients = ingredients.stream()
                                                                                  .collect(Collectors.groupingBy(
@@ -55,6 +52,7 @@ public class RecipeService {
                       .toList();
     }
 
+    @Transactional
     public UUID create(CreateRecipeRequest createRecipeRequest) {
 
         RecipeEntity recipe = recipeMapper.mapToEntity(createRecipeRequest);
@@ -63,15 +61,15 @@ public class RecipeService {
 
         List<RecipeToIngredientEntity> recipeToIngredientEntities = createRecipeRequest.getIngredients()
                                                                                        .stream()
-                                                                                       .map(i -> recipeMapper.mapToEntity(
-                                                                                           recipe.getId(),
-                                                                                           i))
+                                                                                       .map(i -> recipeMapper.mapToEntity(recipe.getId(),
+                                                                                                                          i))
                                                                                        .toList();
         recipeToIngredientEntities.forEach(recipeToIngredientRepository::persist);
 
         return recipe.getId();
     }
 
+    @Transactional
     public void delete(UUID recipeId) {
         recipeToIngredientRepository.deleteByRecipeId(recipeId);
         recipeRepository.delete(recipeId);

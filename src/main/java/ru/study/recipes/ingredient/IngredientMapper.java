@@ -8,7 +8,7 @@ import ru.study.recipes.ingredient.model.CreateIngredientRequest;
 import ru.study.recipes.ingredient.model.IngredientResponse;
 import ru.study.recipes.recipe.model.IngredientInRecipeResponse;
 
-@Mapper(componentModel = "cdi")
+@Mapper(componentModel = "spring")
 public interface IngredientMapper {
 
     IngredientInRecipeResponse map(IngredientInRecipeView ingredient);

@@ -1,0 +1,23 @@
+
+spring:
+  main:
+    banner-mode: off
+  application:
+    name: recipes
+  jackson:
+    mapper:
+      ACCEPT_CASE_INSENSITIVE_ENUMS: true
+  datasource:
+    url: ${POSTGRES_JDBC_URL:}
+    username: ${POSTGRES_USERNAME:}
+    password: ${POSTGRES_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 1
+      auto-commit: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.default_schema: recipes

@@ -1,6 +1,5 @@
 package ru.study.recipes.data.recipe.model;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
