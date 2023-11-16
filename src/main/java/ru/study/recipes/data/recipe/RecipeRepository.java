@@ -17,6 +17,10 @@ public class RecipeRepository {
         em.persist(entity);
     }
 
+    public RecipeEntity findById(UUID recipeId) {
+        return em.find(RecipeEntity.class, recipeId);
+    }
+
     public List<RecipeEntity> findAll() {
         String q = "select r from RecipeEntity r";
         return em.createQuery(q, RecipeEntity.class).getResultList();

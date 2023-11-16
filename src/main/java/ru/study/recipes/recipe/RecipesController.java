@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,38 +17,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.study.recipes.recipe.model.CreateRecipeRequest;
+import ru.study.recipes.recipe.model.RecipeWithIngredientResponse;
 
+import java.util.List;
 import java.util.UUID;
 
-@Controller
+@RestController
+@RequestMapping("/recipes")
 @RequiredArgsConstructor
 public class RecipesController {
 
-    private final ObjectMapper objectMapper;
-
     private final RecipeService recipeService;
 
-    @GetMapping("/recipes")
-    @SneakyThrows
-    public ResponseEntity<String> getAll() {
-        return new ResponseEntity<>(objectMapper.writeValueAsString(recipeService.getAll()), HttpStatus.OK);
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public List<RecipeWithIngredientResponse> getAll() {
+        return recipeService.getAll();
     }
 
-    @PostMapping("/recipes")
-    @SneakyThrows
-    public ResponseEntity create(@RequestBody String createRecipeRequestString) {
+    @GetMapping(value = "/{recipeId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public RecipeWithIngredientResponse get(@PathVariable UUID recipeId) {
+        return recipeService.get(recipeId);
+    }
 
-        CreateRecipeRequest createRecipeRequest = objectMapper.readValue(createRecipeRequestString,
-                                                                         new TypeReference<CreateRecipeRequest>() {});
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public void create(@RequestBody CreateRecipeRequest createRecipeRequest) {
         recipeService.create(createRecipeRequest);
-        return new ResponseEntity(HttpStatus.OK);
     }
 
-    @DeleteMapping("/recipes/{recipeIdString}")
-    public ResponseEntity delete(@PathVariable String recipeIdString) {
-        UUID recipeId = UUID.fromString(recipeIdString);
+    @DeleteMapping("/{recipeId}")
+    public void delete(@PathVariable UUID recipeId) {
         recipeService.delete(recipeId);
-        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

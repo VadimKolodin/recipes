@@ -52,6 +52,15 @@ public class RecipeService {
                       .toList();
     }
 
+    public RecipeWithIngredientResponse get(UUID recipeId) {
+
+        RecipeEntity recipe = recipeRepository.findById(recipeId);
+        List<IngredientInRecipeView> ingredients
+            = recipeToIngredientRepository.findAllByRecipeIds(Collections.singleton(recipeId));
+
+        return recipeMapper.map(recipe, ingredients.stream().map(ingredientMapper::map).toList());
+    }
+
     @Transactional
     public UUID create(CreateRecipeRequest createRecipeRequest) {
 
