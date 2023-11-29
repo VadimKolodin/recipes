@@ -31,4 +31,20 @@ create table recipes.recipes_ingredients
         foreign key (recipe_id) references recipes
 );
 
+create table audit
+(
+    datetime   timestamp(6),
+    id         uuid not null,
+    event      varchar(255),
+    info       varchar(255),
+    table_name varchar(255),
+    primary key (id),
+    );
 
+create table mailing_rules
+(
+    id         uuid not null,
+    email      varchar(255),
+    table_name varchar(255),
+    primary key (id)
+);

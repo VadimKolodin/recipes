@@ -21,9 +21,10 @@ public class IngredientRepository {
         em.persist(entity);
     }
 
-    public void delete(UUID ingredientId) {
+    public IngredientEntity delete(UUID ingredientId) {
         IngredientEntity entity = em.find(IngredientEntity.class, ingredientId);
         em.remove(entity);
+        return entity;
     }
 
 }

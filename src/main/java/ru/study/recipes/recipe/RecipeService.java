@@ -9,6 +9,8 @@ import ru.study.recipes.data.recipe.RecipeToIngredientEntity;
 import ru.study.recipes.data.recipe.RecipeToIngredientRepository;
 import ru.study.recipes.data.recipe.model.IngredientInRecipeView;
 import ru.study.recipes.ingredient.IngredientMapper;
+import ru.study.recipes.messaging.EventLogger;
+import ru.study.recipes.messaging.model.AuditEvent;
 import ru.study.recipes.recipe.model.CreateRecipeRequest;
 import ru.study.recipes.recipe.model.RecipeWithIngredientResponse;
 
@@ -22,9 +24,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RecipeService {
 
-    private final IngredientMapper ingredientMapper;
+    private final EventLogger eventLogger;
 
     private final RecipeMapper recipeMapper;
+
+    private final IngredientMapper ingredientMapper;
 
     private final RecipeRepository recipeRepository;
 
@@ -74,14 +78,17 @@ public class RecipeService {
                                                                                                                           i))
                                                                                        .toList();
         recipeToIngredientEntities.forEach(recipeToIngredientRepository::persist);
-
+        eventLogger.log(recipe, AuditEvent.CREATE);
         return recipe.getId();
     }
 
     @Transactional
     public void delete(UUID recipeId) {
         recipeToIngredientRepository.deleteByRecipeId(recipeId);
-        recipeRepository.delete(recipeId);
+
+        RecipeEntity deleted = recipeRepository.delete(recipeId);
+
+        eventLogger.log(deleted, AuditEvent.DELETE);
     }
 
 }

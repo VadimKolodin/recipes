@@ -26,9 +26,10 @@ public class RecipeRepository {
         return em.createQuery(q, RecipeEntity.class).getResultList();
     }
 
-    public void delete(UUID id) {
+    public RecipeEntity delete(UUID id) {
         RecipeEntity recipeEntity = em.find(RecipeEntity.class, id);
         em.remove(recipeEntity);
+        return recipeEntity;
     }
 
 }
