@@ -11,16 +11,15 @@ import ru.study.recipes.messaging.model.CreateMessage;
 import ru.study.recipes.messaging.model.DeleteMessage;
 
 import java.time.LocalDateTime;
-import javax.print.attribute.standard.Destination;
 
 @Service
 @RequiredArgsConstructor
 public class AuditProducerService implements EventLogger {
 
-    @Value("${application.queue.audit}")
-    private String queueName;
-
     private final JmsTemplate jmsTemplate;
+
+    @Value("${application.topic.audit}")
+    private String topicName;
 
     @Override
     public void log(Object entity, AuditEvent event) {
@@ -44,7 +43,7 @@ public class AuditProducerService implements EventLogger {
 
         auditMessage.setTable(entity.getClass().getAnnotation(Table.class).name());
 
-        jmsTemplate.convertAndSend(queueName, auditMessage);
+        jmsTemplate.convertAndSend(topicName, auditMessage);
     }
 
 }
